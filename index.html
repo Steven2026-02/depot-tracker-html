@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dépôts du Mois d'Août</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .total-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .total-box p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .total-box .amount {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #e9ecef;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f4ff;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .commission-box {
+            background: white;
+            border: 1px solid #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .commission-box h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .commission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .commission-grid .form-group {
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .commission-grid label {
+            min-width: 80px;
+            margin-bottom: 0;
+        }
+
+        .commission-grid input {
+            flex: 1;
+        }
+
+        .commission-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .commission-total {
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .modal-content .form-grid {
+            margin-bottom: 25px;
+        }
+
+        .modal-content .btn-group {
+            justify-content: flex-end;
+        }
+
+        .export-import-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        #customDescription {
+            display: none;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DÉPÔTS DU MOIS D'AOÛT</h1>
+
+        <div class="total-box">
+            <p>TOTAL DES DÉPÔTS</p>
+            <div class="amount"><span id="totalAmount">0,00</span> USD</div>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="depositsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Plateforme</th>
+                        <th>Description</th>
+                        <th style="text-align: right;">Montant USD</th>
+                        <th style="width: 80px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="export-import-buttons">
+            <button class="btn btn-primary" id="exportBtn">Exporter</button>
+            <button class="btn btn-primary" id="importBtn">Importer</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+        </div>
+
+        <div class="form-section">
+            <h3>Ajouter un dépôt</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="addId">ID</label>
+                    <input type="text" id="addId" placeholder="45">
+                </div>
+                <div class="form-group">
+                    <label for="addDate">Date</label>
+                    <input type="date" id="addDate">
+                </div>
+                <div class="form-group">
+                    <label for="addPlatform">Plateforme</label>
+                    <select id="addPlatform">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="SNF">SNF</option>
+                        <option value="BA">BA</option>
+                        <option value="BF">BF</option>
+                        <option value="RP">RP</option>
+                        <option value="WD">WD</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="addDescription">Description</label>
+                    <select id="addDescription">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Black">Black</option>
+                        <option value="FGAZ">FGAZ</option>
+                        <option value="FCL">FCL</option>
+                        <option value="ACCelerateur">ACCelerateur</option>
+                        <option value="WD">WD</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customDescriptionInput">Description personnalisée</label>
+                    <input type="text" id="customDescriptionInput" placeholder="Entrer une description">
+                </div>
+                <div class="form-group">
+                    <label for="addAmount">Montant USD</label>
+                    <input type="number" id="addAmount" placeholder="0.00" step="0.01" min="0">
+                </div>
+            </div>
+            <button class="btn btn-primary" id="addBtn">Ajouter</button>
+        </div>
+
+        <div class="commission-box">
+            <h4>CALCULATEUR DE COMMISSION</h4>
+            <div class="commission-grid">
+                <div class="form-group">
+                    <label for="commissionRate">Taux (%)</label>
+                    <input type="number" id="commissionRate" value="7" step="0.01" min="0">
+                </div>
+            </div>
+            <div class="commission-result">
+                <span id="commissionAmount">0,00</span> USD
+            </div>
+            <div class="commission-total">
+                Total actuel : <span id="commissionTotal">0,00</span> USD
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour modifier -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Modifier un dépôt</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="editId">ID</label>
+                    <input type="text" id="editId">
+                </div>
+                <div class="form-group">
+                    <label for="editDate">Date</label>
+                    <input type="date" id="editDate">
+                </div>
+                <div class="form-group">
+                    <label for="editPlatform">Plateforme</label>
+                    <select id="editPlatform">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="SNF">SNF</option>
+                        <option value="BA">BA</option>
+                        <option value="BF">BF</option>
+                        <option value="RP">RP</option>
+                        <option value="WD">WD</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <select id="editDescription">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="Deposit">Deposit</option>
+                        <option value="Black">Black</option>
+                        <option value="FGAZ">FGAZ</option>
+                        <option value="FCL">FCL</option>
+                        <option value="ACCelerateur">ACCelerateur</option>
+                        <option value="WD">WD</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editAmount">Montant USD</label>
+                    <input type="number" id="editAmount" step="0.01" min="0">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="editCancelBtn">Annuler</button>
+                <button class="btn btn-primary" id="editSaveBtn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour confirmer suppression -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmation</h2>
+            <p style="margin-bottom: 25px; color: #666;">Êtes-vous sûr de vouloir supprimer ce dépôt ?</p>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="deleteCancelBtn">Annuler</button>
+                <button class="btn btn-primary" id="deleteConfirmBtn" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Supprimer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ DONNÉES ET ÉTAT ============
+        let deposits = [];
+        let editingIndex = null;
+        let deletingIndex = null;
+
+        // SVG Icons
+        const editIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
+        const deleteIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
+
+        // ============ CHARGEMENT INITIAL ============
+        function init() {
+            loadFromLocalStorage();
+            renderTable();
+            updateTotal();
+            updateCommission();
+            setTodayDate();
+            attachEventListeners();
+        }
+
+        // ============ EVENT LISTENERS ============
+        function attachEventListeners() {
+            document.getElementById('addBtn').addEventListener('click', addDeposit);
+            document.getElementById('addDescription').addEventListener('change', handleDescriptionChange);
+            document.getElementById('commissionRate').addEventListener('input', updateCommission);
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+            document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+            document.getElementById('importFile').addEventListener('change', importData);
+            
+            // Modal fermeture
+            document.getElementById('editCancelBtn').addEventListener('click', closeEditModal);
+            document.getElementById('editSaveBtn').addEventListener('click', saveEdit);
+            document.getElementById('deleteCancelBtn').addEventListener('click', closeDeleteModal);
+            document.getElementById('deleteConfirmBtn').addEventListener('click', confirmDelete);
+        }
+
+        // ============ GESTION DE LA DESCRIPTION ============
+        function handleDescriptionChange() {
+            const value = document.getElementById('addDescription').value;
+            const customInput = document.getElementById('customDescriptionInput');
+            
+            if (value === 'Autre') {
+                customInput.style.display = 'block';
+                customInput.value = '';
+            } else {
+                customInput.style.display = 'none';
+            }
+        }
+
+        // ============ AJOUTER UN DÉPÔT ============
+        function addDeposit() {
+            const id = document.getElementById('addId').value.trim();
+            const date = document.getElementById('addDate').value;
+            let description = document.getElementById('addDescription').value;
+            const platform = document.getElementById('addPlatform').value;
+            const amount = parseFloat(document.getElementById('addAmount').value);
+
+            if (description === 'Autre') {
+                description = document.getElementById('customDescriptionInput').value.trim();
+            }
+
+            // Validation
+            if (!id || !date || !platform || !description || isNaN(amount) || amount < 0) {
+                alert('Veuillez remplir tous les champs correctement.');
+                return;
+            }
+
+            deposits.push({
+                id,
+                date,
+                platform,
+                description,
+                amount
+            });
+
+            saveToLocalStorage();
+            renderTable();
+            updateTotal();
+            updateCommission();
+            clearForm();
+        }
+
+        // ============ EFFACER LE FORMULAIRE ============
+        function clearForm() {
+            document.getElementById('addId').value = '';
+            document.getElementById('addDate').value = '';
+            document.getElementById('addPlatform').value = '';
+            document.getElementById('addDescription').value = '';
+            document.getElementById('customDescriptionInput').value = '';
+            document.getElementById('customDescriptionInput').style.display = 'none';
+            document.getElementById('addAmount').value = '';
+        }
+
+        // ============ AFFICHER LA TABLE ============
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (deposits.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-message">Aucun dépôt pour le moment</td></tr>';
+                return;
+            }
+
+            deposits.forEach((deposit, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${escapeHtml(deposit.id)}</td>
+                    <td>${formatDate(deposit.date)}</td>
+                    <td>${escapeHtml(deposit.platform)}</td>
+                    <td>${escapeHtml(deposit.description)}</td>
+                    <td style="text-align: right;">${formatAmount(deposit.amount)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="icon-btn" data-action="edit" data-index="${index}" title="Modifier">
+                                ${editIcon}
+                            </button>
+                            <button class="icon-btn" data-action="delete" data-index="${index}" title="Supprimer">
+                                ${deleteIcon}
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Attacher les événements des boutons
+            document.querySelectorAll('[data-action="edit"]').forEach(btn => {
+                btn.addEventListener('click', (e) => openEditModal(parseInt(e.currentTarget.dataset.index)));
+            });
+
+            document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                btn.addEventListener('click', (e) => openDeleteModal(parseInt(e.currentTarget.dataset.index)));
+            });
+        }
+
+        // ============ MODAL MODIFIER ============
+        function openEditModal(index) {
+            editingIndex = index;
+            const deposit = deposits[index];
+
+            document.getElementById('editId').value = deposit.id;
+            document.getElementById('editDate').value = deposit.date;
+            document.getElementById('editPlatform').value = deposit.platform;
+            document.getElementById('editDescription').value = deposit.description;
+            document.getElementById('editAmount').value = deposit.amount;
+
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            editingIndex = null;
+        }
+
+        function saveEdit() {
+            const id = document.getElementById('editId').value.trim();
+            const date = document.getElementById('editDate').value;
+            const description = document.getElementById('editDescription').value;
+            const platform = document.getElementById('editPlatform').value;
+            const amount = parseFloat(document.getElementById('editAmount').value);
+
+            if (!id || !date || !platform || !description || isNaN(amount) || amount < 0) {
+                alert('Veuillez remplir tous les champs correctement.');
+                return;
+            }
+
+            deposits[editingIndex] = {
+                id,
+                date,
+                platform,
+                description,
+                amount
+            };
+
+            saveToLocalStorage();
+            renderTable();
+            updateTotal();
+            updateCommission();
+            closeEditModal();
+        }
+
+        // ============ MODAL SUPPRIMER ============
+        function openDeleteModal(index) {
+            deletingIndex = index;
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deletingIndex = null;
+        }
+
+        function confirmDelete() {
+            if (deletingIndex !== null) {
+                deposits.splice(deletingIndex, 1);
+                saveToLocalStorage();
+                renderTable();
+                updateTotal();
+                updateCommission();
+                closeDeleteModal();
+            }
+        }
+
+        // ============ CALCUL DU TOTAL ============
+        function updateTotal() {
+            let total = 0;
+
+            deposits.forEach(deposit => {
+                if (deposit.platform === 'WD' || deposit.platform === 'C') {
+                    total -= deposit.amount;
+                } else {
+                    total += deposit.amount;
+                }
+            });
+
+            document.getElementById('totalAmount').textContent = formatAmount(total);
+        }
+
+        // ============ CALCUL DE LA COMMISSION ============
+        function updateCommission() {
+            const totalText = document.getElementById('totalAmount').textContent;
+            const total = parseFloat(totalText.replace(',', '.')) || 0;
+            const rate = parseFloat(document.getElementById('commissionRate').value) || 0;
+            const commission = (total * rate) / 100;
+
+            document.getElementById('commissionAmount').textContent = formatAmount(commission);
+            document.getElementById('commissionTotal').textContent = formatAmount(total);
+        }
+
+        // ============ EXPORT DONNÉES ============
+        function exportData() {
+            const data = {
+                version: 1,
+                exportDate: new Date().toISOString(),
+                deposits: deposits
+            };
+
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'depots_du_mois_d_aout.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ============ IMPORT DONNÉES ============
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    if (!data.deposits || !Array.isArray(data.deposits)) {
+                        throw new Error('Format de fichier invalide');
+                    }
+
+                    if (confirm('Remplacer les données actuelles par le fichier importé ?')) {
+                        deposits = data.deposits;
+                        saveToLocalStorage();
+                        renderTable();
+                        updateTotal();
+                        updateCommission();
+                        alert('Données importées avec succès !');
+                    }
+                } catch (error) {
+                    alert('Erreur lors de l\'importation : ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+            document.getElementById('importFile').value = '';
+        }
+
+        // ============ LOCALSTORAGE ============
+        function saveToLocalStorage() {
+            localStorage.setItem('deposits', JSON.stringify(deposits));
+        }
+
+        function loadFromLocalStorage() {
+            const stored = localStorage.getItem('deposits');
+            if (stored) {
+                try {
+                    deposits = JSON.parse(stored);
+                } catch (e) {
+                    deposits = [];
+                }
+            }
+        }
+
+        // ============ UTILITAIRES ============
+        function formatAmount(amount) {
+            return amount.toLocaleString('fr-FR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('fr-FR');
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('addDate').value = today;
+        }
+
+        // Fermer modal au clic sur l'arrière-plan
+        window.addEventListener('click', (e) => {
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+            if (e.target === editModal) closeEditModal();
+            if (e.target === deleteModal) closeDeleteModal();
+        });
+
+        // Initialiser
+        init();
+    </script>
+</body>
+</html>
