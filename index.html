@@ -249,30 +249,26 @@
 
         .bonus-controls {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
             align-items: flex-end;
         }
 
         .bonus-controls .form-group {
-            flex-direction: row;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
         }
 
         .bonus-controls label {
-            min-width: 70px;
-            margin-bottom: 0;
+            margin-bottom: 6px;
         }
 
         .bonus-controls input {
-            flex: 1;
+            padding: 10px 12px;
         }
 
         .bonus-controls .btn {
-            padding: 10px 20px;
-            margin: 0;
+            padding: 10px 24px;
         }
 
         .bonus-result {
@@ -295,10 +291,14 @@
             font-weight: 700;
         }
 
-        .bonus-total {
-            text-align: center;
-            font-size: 13px;
+        .bonus-calculation {
+            background: #f0f4ff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
             color: #666;
+            text-align: center;
+            margin-top: 10px;
         }
 
         .modal {
@@ -485,6 +485,10 @@
             <h4>CALCULATEUR DE BONUS</h4>
             <div class="bonus-controls">
                 <div class="form-group">
+                    <label for="bonusDepotTotal">Montant du dépôt USD</label>
+                    <input type="number" id="bonusDepotTotal" placeholder="0.00" step="0.01" min="0">
+                </div>
+                <div class="form-group">
                     <label for="bonusRate">Taux (%)</label>
                     <input type="number" id="bonusRate" value="7" step="0.01" min="0">
                 </div>
@@ -494,9 +498,7 @@
                 <div class="bonus-result-label">Bonus à appliquer</div>
                 <div class="bonus-result-amount"><span id="bonusAmount">0,00</span> USD</div>
             </div>
-            <div class="bonus-total">
-                Total actuel du solde : <span id="bonusTotal">0,00</span> USD
-            </div>
+            <div class="bonus-calculation" id="bonusCalculationDisplay"></div>
         </div>
     </div>
 
@@ -620,6 +622,8 @@
             document.getElementById('addBtn').addEventListener('click', addDeposit);
             document.getElementById('addDescription').addEventListener('change', handleDescriptionChange);
             document.getElementById('calculateBonusBtn').addEventListener('click', calculateBonus);
+            document.getElementById('bonusDepotTotal').addEventListener('input', updateBonusDisplay);
+            document.getElementById('bonusRate').addEventListener('input', updateBonusDisplay);
             document.getElementById('saveBtn').addEventListener('click', saveData);
             document.getElementById('exportBtn').addEventListener('click', exportData);
             document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
@@ -809,16 +813,35 @@
             });
 
             document.getElementById('totalAmount').textContent = formatAmount(total);
-            document.getElementById('bonusTotal').textContent = formatAmount(total);
+            document.getElementById('bonusDepotTotal').value = total;
+            updateBonusDisplay();
+        }
+
+        // ============ AFFICHER LE CALCUL DU BONUS ============
+        function updateBonusDisplay() {
+            const depotTotal = parseFloat(document.getElementById('bonusDepotTotal').value) || 0;
+            const rate = parseFloat(document.getElementById('bonusRate').value) || 0;
+            const bonus = (depotTotal * rate) / 100;
+
+            if (depotTotal > 0 && rate > 0) {
+                const calculation = `${formatAmount(depotTotal)} × ${formatAmount(rate)}% = ${formatAmount(bonus)}`;
+                document.getElementById('bonusCalculationDisplay').textContent = calculation;
+            } else {
+                document.getElementById('bonusCalculationDisplay').textContent = '';
+            }
         }
 
         // ============ CALCUL DU BONUS ============
         function calculateBonus() {
-            const totalText = document.getElementById('totalAmount').textContent;
-            const total = parseFloat(totalText.replace(',', '.')) || 0;
+            const depotTotal = parseFloat(document.getElementById('bonusDepotTotal').value) || 0;
             const rate = parseFloat(document.getElementById('bonusRate').value) || 0;
-            const bonus = (total * rate) / 100;
 
+            if (depotTotal <= 0) {
+                alert('Veuillez entrer un montant de dépôt valide.');
+                return;
+            }
+
+            const bonus = (depotTotal * rate) / 100;
             document.getElementById('bonusAmount').textContent = formatAmount(bonus);
         }
 
