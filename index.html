@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dépôts du Mois d'Août</title>
+    <title>Dépôts</title>
     <style>
         * {
             margin: 0;
@@ -27,12 +27,52 @@
             padding: 40px;
         }
 
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 15px;
+        }
+
         h1 {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 40px;
             font-size: 32px;
             font-weight: 600;
+            margin: 0;
+        }
+
+        .edit-title-btn {
+            background: none;
+            border: 1px solid #667eea;
+            color: #667eea;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .edit-title-btn:hover {
+            background: #f0f4ff;
+        }
+
+        .title-input {
+            font-size: 32px;
+            font-weight: 600;
+            color: #2c3e50;
+            border: 2px solid #667eea;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .title-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .total-box {
@@ -192,7 +232,7 @@
             gap: 10px;
         }
 
-        .commission-box {
+        .bonus-box {
             background: white;
             border: 2px solid #667eea;
             padding: 25px;
@@ -200,14 +240,14 @@
             margin-bottom: 20px;
         }
 
-        .commission-box h4 {
+        .bonus-box h4 {
             color: #2c3e50;
             margin-bottom: 20px;
             font-size: 16px;
             font-weight: 600;
         }
 
-        .commission-controls {
+        .bonus-controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
@@ -215,27 +255,27 @@
             align-items: flex-end;
         }
 
-        .commission-controls .form-group {
+        .bonus-controls .form-group {
             flex-direction: row;
             align-items: center;
             gap: 10px;
         }
 
-        .commission-controls label {
+        .bonus-controls label {
             min-width: 70px;
             margin-bottom: 0;
         }
 
-        .commission-controls input {
+        .bonus-controls input {
             flex: 1;
         }
 
-        .commission-controls .btn {
+        .bonus-controls .btn {
             padding: 10px 20px;
             margin: 0;
         }
 
-        .commission-result {
+        .bonus-result {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 20px;
@@ -244,18 +284,18 @@
             margin-bottom: 15px;
         }
 
-        .commission-result-label {
+        .bonus-result-label {
             font-size: 12px;
             opacity: 0.9;
             margin-bottom: 8px;
         }
 
-        .commission-result-amount {
+        .bonus-result-amount {
             font-size: 28px;
             font-weight: 700;
         }
 
-        .commission-total {
+        .bonus-total {
             text-align: center;
             font-size: 13px;
             color: #666;
@@ -318,6 +358,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         #customDescription {
@@ -330,11 +371,38 @@
             color: #999;
             font-size: 16px;
         }
+
+        .save-success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>DÉPÔTS DU MOIS D'AOÛT</h1>
+        <div class="title-container">
+            <h1 id="pageTitle">DÉPÔTS DU MOIS D'AOÛT</h1>
+            <button class="edit-title-btn" id="editTitleBtn">Éditer titre</button>
+            <input type="text" id="titleInput" class="title-input" style="display: none;">
+        </div>
+
+        <div class="save-success" id="saveMessage">✓ Données sauvegardées avec succès !</div>
 
         <div class="total-box">
             <p>TOTAL DES DÉPÔTS</p>
@@ -359,8 +427,9 @@
         </div>
 
         <div class="export-import-buttons">
-            <button class="btn btn-primary" id="exportBtn">Exporter</button>
-            <button class="btn btn-primary" id="importBtn">Importer</button>
+            <button class="btn btn-primary" id="saveBtn">💾 Enregistrer</button>
+            <button class="btn btn-primary" id="exportBtn">📥 Exporter</button>
+            <button class="btn btn-primary" id="importBtn">📤 Importer</button>
             <input type="file" id="importFile" accept=".json" style="display: none;">
         </div>
 
@@ -412,21 +481,21 @@
             <button class="btn btn-primary" id="addBtn">Ajouter</button>
         </div>
 
-        <div class="commission-box">
-            <h4>CALCULATEUR DE COMMISSION</h4>
-            <div class="commission-controls">
+        <div class="bonus-box">
+            <h4>CALCULATEUR DE BONUS</h4>
+            <div class="bonus-controls">
                 <div class="form-group">
-                    <label for="commissionRate">Taux (%)</label>
-                    <input type="number" id="commissionRate" value="7" step="0.01" min="0">
+                    <label for="bonusRate">Taux (%)</label>
+                    <input type="number" id="bonusRate" value="7" step="0.01" min="0">
                 </div>
-                <button class="btn btn-primary" id="calculateCommissionBtn">Calculer</button>
+                <button class="btn btn-primary" id="calculateBonusBtn">Calculer</button>
             </div>
-            <div class="commission-result">
-                <div class="commission-result-label">Commission à appliquer</div>
-                <div class="commission-result-amount"><span id="commissionAmount">0,00</span> USD</div>
+            <div class="bonus-result">
+                <div class="bonus-result-label">Bonus à appliquer</div>
+                <div class="bonus-result-amount"><span id="bonusAmount">0,00</span> USD</div>
             </div>
-            <div class="commission-total">
-                Total actuel du solde : <span id="commissionTotal">0,00</span> USD
+            <div class="bonus-total">
+                Total actuel du solde : <span id="bonusTotal">0,00</span> USD
             </div>
         </div>
     </div>
@@ -498,6 +567,8 @@
         let deposits = [];
         let editingIndex = null;
         let deletingIndex = null;
+        let pageTitle = 'DÉPÔTS DU MOIS D\'AOÛT';
+        let isEditingTitle = false;
 
         // SVG Icons
         const editIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>`;
@@ -510,13 +581,46 @@
             updateTotal();
             setTodayDate();
             attachEventListeners();
+            displayPageTitle();
+        }
+
+        // ============ GESTION DU TITRE ============
+        function displayPageTitle() {
+            document.getElementById('pageTitle').textContent = pageTitle;
+        }
+
+        function toggleEditTitle() {
+            if (!isEditingTitle) {
+                isEditingTitle = true;
+                document.getElementById('pageTitle').style.display = 'none';
+                document.getElementById('titleInput').style.display = 'block';
+                document.getElementById('titleInput').value = pageTitle;
+                document.getElementById('titleInput').focus();
+                document.getElementById('editTitleBtn').textContent = 'Confirmer';
+            } else {
+                const newTitle = document.getElementById('titleInput').value.trim();
+                if (newTitle) {
+                    pageTitle = newTitle;
+                    saveToLocalStorage();
+                }
+                document.getElementById('pageTitle').style.display = 'block';
+                document.getElementById('titleInput').style.display = 'none';
+                document.getElementById('editTitleBtn').textContent = 'Éditer titre';
+                isEditingTitle = false;
+                displayPageTitle();
+            }
         }
 
         // ============ EVENT LISTENERS ============
         function attachEventListeners() {
+            document.getElementById('editTitleBtn').addEventListener('click', toggleEditTitle);
+            document.getElementById('titleInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') toggleEditTitle();
+            });
             document.getElementById('addBtn').addEventListener('click', addDeposit);
             document.getElementById('addDescription').addEventListener('change', handleDescriptionChange);
-            document.getElementById('calculateCommissionBtn').addEventListener('click', calculateCommission);
+            document.getElementById('calculateBonusBtn').addEventListener('click', calculateBonus);
+            document.getElementById('saveBtn').addEventListener('click', saveData);
             document.getElementById('exportBtn').addEventListener('click', exportData);
             document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
             document.getElementById('importFile').addEventListener('change', importData);
@@ -705,17 +809,31 @@
             });
 
             document.getElementById('totalAmount').textContent = formatAmount(total);
-            document.getElementById('commissionTotal').textContent = formatAmount(total);
+            document.getElementById('bonusTotal').textContent = formatAmount(total);
         }
 
-        // ============ CALCUL DE LA COMMISSION ============
-        function calculateCommission() {
+        // ============ CALCUL DU BONUS ============
+        function calculateBonus() {
             const totalText = document.getElementById('totalAmount').textContent;
             const total = parseFloat(totalText.replace(',', '.')) || 0;
-            const rate = parseFloat(document.getElementById('commissionRate').value) || 0;
-            const commission = (total * rate) / 100;
+            const rate = parseFloat(document.getElementById('bonusRate').value) || 0;
+            const bonus = (total * rate) / 100;
 
-            document.getElementById('commissionAmount').textContent = formatAmount(commission);
+            document.getElementById('bonusAmount').textContent = formatAmount(bonus);
+        }
+
+        // ============ ENREGISTRER LES DONNÉES ============
+        function saveData() {
+            saveToLocalStorage();
+            showSaveMessage();
+        }
+
+        function showSaveMessage() {
+            const msg = document.getElementById('saveMessage');
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
         }
 
         // ============ EXPORT DONNÉES ============
@@ -723,6 +841,7 @@
             const data = {
                 version: 1,
                 exportDate: new Date().toISOString(),
+                title: pageTitle,
                 deposits: deposits
             };
 
@@ -731,7 +850,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'depots_du_mois_d_aout.json';
+            a.download = 'depots_export.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -753,9 +872,13 @@
 
                     if (confirm('Remplacer les données actuelles par le fichier importé ?')) {
                         deposits = data.deposits;
+                        if (data.title) {
+                            pageTitle = data.title;
+                        }
                         saveToLocalStorage();
                         renderTable();
                         updateTotal();
+                        displayPageTitle();
                         alert('Données importées avec succès !');
                     }
                 } catch (error) {
@@ -768,16 +891,23 @@
 
         // ============ LOCALSTORAGE ============
         function saveToLocalStorage() {
-            localStorage.setItem('deposits', JSON.stringify(deposits));
+            const data = {
+                title: pageTitle,
+                deposits: deposits
+            };
+            localStorage.setItem('depositsData', JSON.stringify(data));
         }
 
         function loadFromLocalStorage() {
-            const stored = localStorage.getItem('deposits');
+            const stored = localStorage.getItem('depositsData');
             if (stored) {
                 try {
-                    deposits = JSON.parse(stored);
+                    const data = JSON.parse(stored);
+                    deposits = data.deposits || [];
+                    pageTitle = data.title || 'DÉPÔTS DU MOIS D\'AOÛT';
                 } catch (e) {
                     deposits = [];
+                    pageTitle = 'DÉPÔTS DU MOIS D\'AOÛT';
                 }
             }
         }
