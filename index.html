@@ -102,6 +102,7 @@
             justify-content: center;
             border-radius: 4px;
             transition: background 0.2s;
+            color: #667eea;
         }
 
         .icon-btn:hover {
@@ -193,50 +194,65 @@
 
         .commission-box {
             background: white;
-            border: 1px solid #e9ecef;
-            padding: 20px;
+            border: 2px solid #667eea;
+            padding: 25px;
             border-radius: 10px;
             margin-bottom: 20px;
         }
 
         .commission-box h4 {
             color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 14px;
+            margin-bottom: 20px;
+            font-size: 16px;
             font-weight: 600;
         }
 
-        .commission-grid {
+        .commission-controls {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            align-items: flex-end;
         }
 
-        .commission-grid .form-group {
+        .commission-controls .form-group {
             flex-direction: row;
             align-items: center;
             gap: 10px;
         }
 
-        .commission-grid label {
-            min-width: 80px;
+        .commission-controls label {
+            min-width: 70px;
             margin-bottom: 0;
         }
 
-        .commission-grid input {
+        .commission-controls input {
             flex: 1;
+        }
+
+        .commission-controls .btn {
+            padding: 10px 20px;
+            margin: 0;
         }
 
         .commission-result {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 6px;
             text-align: center;
-            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .commission-result-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .commission-result-amount {
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 10px;
         }
 
         .commission-total {
@@ -398,17 +414,19 @@
 
         <div class="commission-box">
             <h4>CALCULATEUR DE COMMISSION</h4>
-            <div class="commission-grid">
+            <div class="commission-controls">
                 <div class="form-group">
                     <label for="commissionRate">Taux (%)</label>
                     <input type="number" id="commissionRate" value="7" step="0.01" min="0">
                 </div>
+                <button class="btn btn-primary" id="calculateCommissionBtn">Calculer</button>
             </div>
             <div class="commission-result">
-                <span id="commissionAmount">0,00</span> USD
+                <div class="commission-result-label">Commission à appliquer</div>
+                <div class="commission-result-amount"><span id="commissionAmount">0,00</span> USD</div>
             </div>
             <div class="commission-total">
-                Total actuel : <span id="commissionTotal">0,00</span> USD
+                Total actuel du solde : <span id="commissionTotal">0,00</span> USD
             </div>
         </div>
     </div>
@@ -490,7 +508,6 @@
             loadFromLocalStorage();
             renderTable();
             updateTotal();
-            updateCommission();
             setTodayDate();
             attachEventListeners();
         }
@@ -499,7 +516,7 @@
         function attachEventListeners() {
             document.getElementById('addBtn').addEventListener('click', addDeposit);
             document.getElementById('addDescription').addEventListener('change', handleDescriptionChange);
-            document.getElementById('commissionRate').addEventListener('input', updateCommission);
+            document.getElementById('calculateCommissionBtn').addEventListener('click', calculateCommission);
             document.getElementById('exportBtn').addEventListener('click', exportData);
             document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
             document.getElementById('importFile').addEventListener('change', importData);
@@ -553,7 +570,6 @@
             saveToLocalStorage();
             renderTable();
             updateTotal();
-            updateCommission();
             clearForm();
         }
 
@@ -652,7 +668,6 @@
             saveToLocalStorage();
             renderTable();
             updateTotal();
-            updateCommission();
             closeEditModal();
         }
 
@@ -673,7 +688,6 @@
                 saveToLocalStorage();
                 renderTable();
                 updateTotal();
-                updateCommission();
                 closeDeleteModal();
             }
         }
@@ -691,17 +705,17 @@
             });
 
             document.getElementById('totalAmount').textContent = formatAmount(total);
+            document.getElementById('commissionTotal').textContent = formatAmount(total);
         }
 
         // ============ CALCUL DE LA COMMISSION ============
-        function updateCommission() {
+        function calculateCommission() {
             const totalText = document.getElementById('totalAmount').textContent;
             const total = parseFloat(totalText.replace(',', '.')) || 0;
             const rate = parseFloat(document.getElementById('commissionRate').value) || 0;
             const commission = (total * rate) / 100;
 
             document.getElementById('commissionAmount').textContent = formatAmount(commission);
-            document.getElementById('commissionTotal').textContent = formatAmount(total);
         }
 
         // ============ EXPORT DONNÉES ============
@@ -742,7 +756,6 @@
                         saveToLocalStorage();
                         renderTable();
                         updateTotal();
-                        updateCommission();
                         alert('Données importées avec succès !');
                     }
                 } catch (error) {
